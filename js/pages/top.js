@@ -15,7 +15,7 @@ const lyTop = {
                                 <!--searchAutoComplete--> \
                                 <div class='input-append'> \
                                     <input type='text' id='autocomplete' v-model='key' \
-                                           class='input-error input-xxlarge' @keyup.enter='search'/> \
+                                           class='input-error input-xxlarge' @keyup.enter='search' /> \
                                     <button @click='search' class='sui-btn btn-xlarge btn-danger' type='button'>搜索</button> \
                                 </div> \
                             </div> \
@@ -79,7 +79,7 @@ const lyTop = {
     },
     methods: {
         search() {
-            window.location = '/search.html?key=' + this.key;
+            window.location = '/search.html#key=' + this.key;
         },
         getUrlParam: function (name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -91,7 +91,7 @@ const lyTop = {
         }
     },
     created() {
-        this.key = this.getUrlParam("key");
+        this.key = ly.parse(location.hash.substring(1)).key;
     },
     components: {
         shortcut:() => import('./shortcut.js')

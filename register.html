@@ -126,6 +126,9 @@
 <script src="./js/common.js"></script>
 <script src="./js/validate.js"></script>
 <script type="text/javascript">
+    var InterValObj;
+   var  time_count =60; //间隔函数，1秒执行
+   var curCount = 0;//当前剩余秒数
     Vue.use(VeeValidate, {
         events: 'blur',
         dictionary: {
@@ -187,9 +190,32 @@
                 this.$validator.validate("phone").then(r => {
                     if (r) {
                         leyou.http.post("/user/code", "phone=" + this.user.phone);
+                        //设置点击事件不可用
+                        $(".code-span").css({
+                            pointerEvents:"none",
+                            background:"lightgray",
+                        });
+//倒计时
+                        InterValObj = window.setInterval(this.SetRemainTime, 1000); //启动计时器，1秒执行一
                     }
                 });
 
+            },
+            SetRemainTime(){
+                if (time_count < 1) {
+                    window.clearInterval(InterValObj);//停止计时器
+                    $(".code-span").css({
+                        pointerEvents:"auto",
+                        background:"#fff",
+                    });
+                    $(".code-span").html("重新发送验证码");
+                    time_count =60; //间隔函数，1秒执行
+                    curCount = 0;//当前剩余秒数
+                }
+                else {
+                    time_count--;
+                    $(".code-span").html(" <span style='color: red'>" + time_count + "</span>秒后可重新发送");
+                }
             },
             submit() {
                 this.$validator.validateAll().then(d => {
